@@ -6,7 +6,7 @@ builder.AddNpmApp("webfrontend", "../StocksDemo.Web")
     .WithReference(apiService)
     .WaitFor(apiService)
     .WithExternalHttpEndpoints()
-    .WithHttpEndpoint(env: "PORT");
+    .WithHttpsEndpoint(env: "PORT");
     
 
 builder.Build().Run();

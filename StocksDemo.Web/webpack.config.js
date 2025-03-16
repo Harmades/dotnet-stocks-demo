@@ -2,6 +2,7 @@
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = 'style-loader';
@@ -15,14 +16,19 @@ const config = {
         open: true,
         host: 'localhost',
         port: process.env.PORT || 8080,
+        server: 'https'
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.html',
         }),
-
-        // Add your plugins here
-        // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+        new webpack.DefinePlugin({
+            'stocksDemoConfig': {
+                OTEL_EXPORTER_OTLP_ENDPOINT: JSON.stringify(process.env.OTEL_EXPORTER_OTLP_ENDPOINT),
+                OTEL_EXPORTER_OTLP_HEADERS: JSON.stringify(process.env.OTEL_EXPORTER_OTLP_HEADERS),
+                OTEL_RESOURCE_ATTRIBUTES: JSON.stringify(process.env.OTEL_RESOURCE_ATTRIBUTES),
+            },
+        }),
     ],
     module: {
         rules: [
