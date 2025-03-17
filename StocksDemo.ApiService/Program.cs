@@ -1,38 +1,42 @@
+using Alpaca.Markets;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddSqlServerClient(connectionName: "database");
+// builder.AddSqlServerClient(connectionName: "database");
+
+builder.Configuration.AddUserSecrets<WebApplication>();
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
+builder.Services.Configure<StocksDemoConfiguration>(builder.Configuration.GetSection(StocksDemoConfiguration.ConfigurationKey));
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 
-string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
+app.MapGet("/stocks/{symbol}", async (string symbol, [FromServices] IOptions<StocksDemoConfiguration> configurationOptions) => {
+    var configuration = configurationOptions.Value;
+    var securityKey = new SecretKey(configuration.AlpacaApiKey, configuration.AlpacaApiSecret);
+    var client = Alpaca.Markets.Environments.Paper.GetAlpacaDataClient(securityKey);
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    var quote = await client.GetLatestQuoteAsync(new LatestMarketDataRequest(symbol));
+
+    return new Quote
+    {
+        Symbol = quote.Symbol,
+        Price = (quote.AskPrice + quote.BidPrice) / 2
+    };
+});
 
 app.MapDefaultEndpoints();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
