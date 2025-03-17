@@ -7,9 +7,8 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
 import { Resource } from '@opentelemetry/resources';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions'
 import { getWebAutoInstrumentations } from '@opentelemetry/auto-instrumentations-web';
-import { SeverityNumber } from "@opentelemetry/api-logs";
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-proto";
-const { logs } = require('@opentelemetry/api-logs');
+import { initializeIcons, ThemeProvider } from "@fluentui/react";
 const { events } = require('@opentelemetry/api-events');
 const { EventLoggerProvider } = require('@opentelemetry/sdk-events');
 const {
@@ -84,9 +83,13 @@ eventLogger.emit({
 // Shutdown is done directly on the LoggerProvider
 loggerProvider.shutdown();
 
+initializeIcons();
+
 const App: React.FC = () => {
   return (
+    <ThemeProvider>
       <AppRouter />
+    </ThemeProvider>
   );
 }
 

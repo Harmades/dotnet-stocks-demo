@@ -15,6 +15,8 @@ builder.Configuration.AddUserSecrets<WebApplication>();
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
 
+builder.Services.AddCors();
+
 // Add services to the container.
 builder.Services.AddProblemDetails();
 builder.Services.Configure<StocksDemoConfiguration>(builder.Configuration.GetSection(StocksDemoConfiguration.ConfigurationKey));
@@ -37,6 +39,8 @@ app.MapGet("/stocks/{symbol}", async (string symbol, [FromServices] IOptions<Sto
         Price = (quote.AskPrice + quote.BidPrice) / 2
     };
 });
+
+app.UseCors(configure => configure.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.MapDefaultEndpoints();
 app.Run();

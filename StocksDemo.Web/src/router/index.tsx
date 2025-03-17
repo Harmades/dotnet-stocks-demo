@@ -7,11 +7,17 @@ import Navbar from '../components/Navbar';
 const AppRouter: React.FC = () => {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About msg="React" />} />
-      </Routes>
+      <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
+        <div style={{ height: 'auto', border: '1px solid #eee', background: 'ghostwhite' }}>
+          <Navbar />
+        </div>
+        <div style={{ flex: 1 }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About msg="React" />} />
+          </Routes>
+        </div>
+      </div>
     </Router>
   );
 };

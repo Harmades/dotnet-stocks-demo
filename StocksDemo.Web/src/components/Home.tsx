@@ -1,16 +1,22 @@
 import React from "react";
-import webpackLogo from "../assets/webpack.png";
+import { StocksDemoApiClient, Quote } from "../clients/StocksDemoApiClient";
 
 const App:React.FC = () => {
+  const [stock, setStock] = React.useState<Quote | null>(null);
+  React.useEffect(() => {
+    const fetchStock = async () => {
+      const client = new StocksDemoApiClient('https://localhost:7462');
+      const result = await client.getStock('MSFT');
+      return result;
+    };
 
-
+    fetchStock().then((result) => setStock(result));
+  }, []);
   return (
     <main>
       <div id="app">
-        <img alt="Webpack logo" src={webpackLogo} />
-        <h1 className="heading">This is the <span>Home</span> page!</h1>
-        <p> Click the buttons below to increment and decrement the count.</p>
-    
+        <h1>Stocks Demo</h1>
+        <p>Stock price for MSFT: {stock?.price}</p>
       </div>
     </main>
   );
