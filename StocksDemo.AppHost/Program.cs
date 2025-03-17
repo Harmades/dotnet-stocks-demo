@@ -1,6 +1,13 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var apiService = builder.AddProject<Projects.StocksDemo_ApiService>("apiservice");
+var sql = builder.AddSqlServer("sql")
+                 .WithLifetime(ContainerLifetime.Persistent);
+
+var db = sql.AddDatabase("database");
+
+var apiService = builder.AddProject<Projects.StocksDemo_ApiService>("apiservice")
+       .WithReference(db)
+       .WaitFor(db);
 
 builder.AddNpmApp("webfrontend", "../StocksDemo.Web")
     .WithReference(apiService)

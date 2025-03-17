@@ -1,5 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddSqlServerClient(connectionName: "database");
+
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
 
