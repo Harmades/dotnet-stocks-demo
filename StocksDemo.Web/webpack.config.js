@@ -27,6 +27,7 @@ const config = {
                 OTEL_EXPORTER_OTLP_ENDPOINT: JSON.stringify(process.env.OTEL_EXPORTER_OTLP_ENDPOINT),
                 OTEL_EXPORTER_OTLP_HEADERS: JSON.stringify(process.env.OTEL_EXPORTER_OTLP_HEADERS),
                 OTEL_RESOURCE_ATTRIBUTES: JSON.stringify(process.env.OTEL_RESOURCE_ATTRIBUTES),
+                STOCKSDEMOAPI_URL: JSON.stringify(process.env.services__apiservice__https__0)
             },
         }),
     ],
