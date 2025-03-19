@@ -1,5 +1,5 @@
 import React from "react";
-import { StocksDemoApiClient, Quote } from "../clients/StocksDemoApiClient";
+import { StocksDemoApiClient, Stock } from "../clients/StocksDemoApiClient";
 import { StocksComponent } from "./Stocks";
 
 declare let stocksDemoConfig: any;

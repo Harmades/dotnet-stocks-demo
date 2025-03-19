@@ -8,7 +8,7 @@ namespace StocksDemo.ApiService.UnitTests;
 public class StocksServiceUnitTests
 {
     [Fact]
-    public async Task GetQuote_Empty_Throws_ArgumentException()
+    public async Task GetStock_Empty_Throws_ArgumentException()
     {
         var configuration = new StocksDemoConfiguration
         {
@@ -17,6 +17,6 @@ public class StocksServiceUnitTests
         };
         var stocksService = new StocksService(Options.Create(configuration));
 
-        await Assert.ThrowsAsync<ArgumentException>(() => stocksService.GetQuote(string.Empty));
+        await Assert.ThrowsAsync<ArgumentException>(() => stocksService.GetStock(string.Empty));
     }
 }

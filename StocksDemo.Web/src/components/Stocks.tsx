@@ -1,11 +1,11 @@
 import React from "react";
-import { Quote, StocksDemoApiClient } from "../clients/StocksDemoApiClient";
+import { Stock, StocksDemoApiClient } from "../clients/StocksDemoApiClient";
 import { FontSizes, getTheme, List, Separator, Stack } from "@fluentui/react";
 
 declare let stocksDemoConfig: any;
 
 export const StocksComponent: React.FC = () => {
-    const [stocks, setStocks] = React.useState<Quote[]>([]);
+    const [stocks, setStocks] = React.useState<Stock[]>([]);
 
     const theme = getTheme();
 
@@ -29,7 +29,7 @@ export const StocksComponent: React.FC = () => {
           },
 
     }
-    const onRenderCell = (item: Quote | undefined, index: number | undefined) => {
+    const onRenderCell = (item: Stock | undefined, index: number | undefined) => {
         return (
             item &&
                 <Stack
