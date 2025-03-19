@@ -1,11 +1,13 @@
 import React from "react";
 import { Quote, StocksDemoApiClient } from "../clients/StocksDemoApiClient";
-import { FontSizes, List, Separator, Stack } from "@fluentui/react";
+import { FontSizes, getTheme, List, Separator, Stack } from "@fluentui/react";
 
 declare let stocksDemoConfig: any;
 
 export const StocksComponent: React.FC = () => {
     const [stocks, setStocks] = React.useState<Quote[]>([]);
+
+    const theme = getTheme();
 
     React.useEffect(() => {
         const fetchStock = async () => {
@@ -25,13 +27,21 @@ export const StocksComponent: React.FC = () => {
             display: 'flex',
             justifyContent: 'center',
           },
+
     }
     const onRenderCell = (item: Quote | undefined, index: number | undefined) => {
         return (
             item &&
                 <Stack
                     key={index}
-                    style={{ float:'left', border: '1px solid #eee', height: '200px', width: '200px', margin: '4px'  }}
+                    style={{
+                        float: 'left',
+                        border: '1px solid #eee',
+                        height: '200px',
+                        width: '200px',
+                        margin: '4px',
+                        boxShadow: theme.effects.elevation4,
+                        borderRadius: theme.effects.roundedCorner4}}
                     tokens={{ childrenGap: 10 }}>
                     <Stack.Item styles={stackItemStyles}>
                         <div style={{ fontSize: FontSizes.size20 }}>{item.symbol}</div>
@@ -47,7 +57,7 @@ export const StocksComponent: React.FC = () => {
                                 </div>
                             </Stack.Item>
                             <Stack.Item>
-                                <div style={{ fontSize: FontSizes.size32 }}>
+                                <div style={{ fontSize: FontSizes.size32, color: theme.palette.green }}>
                                     (+3.59%)
                                 </div>
                             </Stack.Item>
