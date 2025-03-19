@@ -1,5 +1,5 @@
 import React from "react";
-import AppRouter from "./router";
+import {AppRouter} from "./router";
 import { SimpleSpanProcessor, WebTracerProvider } from "@opentelemetry/sdk-trace-web";
 import { ZoneContextManager } from "@opentelemetry/context-zone";
 import { registerInstrumentations } from "@opentelemetry/instrumentation";

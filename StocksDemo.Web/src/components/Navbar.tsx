@@ -3,7 +3,7 @@ import React from 'react';
 import { Nav, INavStyles, INavLinkGroup } from '@fluentui/react/lib/Nav';
 import { initializeIcons, ThemeProvider } from '@fluentui/react';
 
-const NavBar: React.FC = () => {
+export const Navbar: React.FC = () => {
 
   const navStyles: Partial<INavStyles> = {
   };
@@ -67,10 +67,8 @@ const NavBar: React.FC = () => {
       ],
     },
   ];
-  
+
   return (
     <Nav groups={navLinkGroups} styles={navStyles} />
   );
 };
-
-export default NavBar;
