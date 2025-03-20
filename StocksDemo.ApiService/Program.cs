@@ -33,7 +33,7 @@ app.MapGet("/stocks/{symbol}", async (
     return await stockService.GetStock(symbol);
 });
 
-app.MapGet("/stocks", async ([FromQuery(Name = "symbols")] string symbols, [FromServices] IStocksService stockService) => {
+app.MapGet("/stocks", async ([FromQuery(Name = "symbols")] string? symbols, [FromServices] IStocksService stockService) => {
     var options = new StocksRequestOptions
     {
         Symbols = symbols?.Split(',').ToList()

@@ -60,7 +60,12 @@ public class StocksService : IStocksService
 
     public async Task<List<Stock>> GetStocks(StocksRequestOptions options)
     {
-        ArgumentNullException.ThrowIfNull(options.Symbols, nameof(options.Symbols));
+        // If symbols are null, provide most active stocks.
+        if (options.Symbols == null)
+        {
+            var mostActiveStocks = await client.ListMostActiveStocksByVolumeAsync(25);
+            options = options with { Symbols = mostActiveStocks.Select(stock => stock.Symbol).ToList() };
+        }
 
         var bars = await client.ListLatestBarsAsync(new LatestMarketDataListRequest(options.Symbols));
 
