@@ -1,25 +1,26 @@
 import React from "react";
 import { Stock, StocksDemoApiClient } from "../clients/StocksDemoApiClient";
-import { FontSizes, getTheme, List, Separator, Stack } from "@fluentui/react";
+import { FontSizes, getTheme, List, SearchBox, Separator, Stack } from "@fluentui/react";
 
 declare let stocksDemoConfig: any;
 
 export const StocksComponent: React.FC = () => {
     const [stocks, setStocks] = React.useState<Stock[]>([]);
+    const [searchText, setSearchText] = React.useState<string | null>(null);
 
     const theme = getTheme();
 
     React.useEffect(() => {
-        const fetchStock = async () => {
+        const fetchStock = async (searchText: string | null): Promise<Stock[]> => {
             const client = new StocksDemoApiClient(stocksDemoConfig.STOCKSDEMOAPI_URL);
-            // const result = await client.getStock('MSFT');
-            // const result2 = await client.getStock('AAPL');
-            const result = { symbol: 'MSFT', price: 123 };
-            return Array(50).fill(result);
+            const symbols = searchText?.split(',') ?? null;
+            const result = await client.getStocks(symbols);
+            // const result = { symbol: 'MSFT', price: 123 };
+            return result;
         };
 
-        fetchStock().then((result) => setStocks(result));
-    }, []);
+        fetchStock(searchText).then((result) => setStocks(result));
+    }, [searchText]);
 
     const stackItemStyles = {
         root: {
@@ -27,8 +28,12 @@ export const StocksComponent: React.FC = () => {
             display: 'flex',
             justifyContent: 'center',
           },
+    };
 
-    }
+    const getColour = (stock: Stock) => {
+        return stock.changePercentage >= 0 ? theme.palette.green : theme.palette.red;
+    };
+
     const onRenderCell = (item: Stock | undefined, index: number | undefined) => {
         return (
             item &&
@@ -52,13 +57,13 @@ export const StocksComponent: React.FC = () => {
                     <Stack.Item styles={stackItemStyles}>
                         <Stack>
                             <Stack.Item>
-                                <div style={{ fontSize: FontSizes.size32 }}>
-                                    {item.price}$
+                                <div style={{ fontSize: FontSizes.size32, textAlign: 'right' }}>
+                                    {item.currentPrice.vwap.toFixed(2)}$
                                 </div>
                             </Stack.Item>
                             <Stack.Item>
-                                <div style={{ fontSize: FontSizes.size32, color: theme.palette.green }}>
-                                    (+3.59%)
+                                <div style={{ fontSize: FontSizes.size32, color: getColour(item), textAlign: 'right' }}>
+                                    {item.changePercentage >= 0 ? '+' : ''}{item.changePercentage.toFixed(2)}%
                                 </div>
                             </Stack.Item>
                         </Stack>
@@ -68,10 +73,17 @@ export const StocksComponent: React.FC = () => {
     };
 
     return (
-        <List
-            items = {stocks}
-            onRenderCell = {onRenderCell}
-            onShouldVirtualize = {() => false}
-        />
+        <Stack styles={{ root: { marginTop: '4px' }}}>
+            <Stack.Item>
+                <SearchBox underlined onSearch={(newValue: string) => setSearchText(newValue)}></SearchBox>
+            </Stack.Item>
+            <Stack.Item>
+                <List
+                    items = {stocks}
+                    onRenderCell = {onRenderCell}
+                    onShouldVirtualize = {() => false}
+                />
+            </Stack.Item>
+        </Stack>
     );
 }

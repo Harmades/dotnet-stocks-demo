@@ -1,6 +1,22 @@
+export interface StockPricePoint {
+    low: number;
+    high: number;
+    open: number;
+    close: number;
+    vwap: number;
+}
+
+export interface StockHistory {
+    date: string;
+    price: StockPricePoint;
+    volume: number;
+}
+
 export interface Stock {
     symbol: string;
-    price: number;
+    currentPrice: StockPricePoint;
+    history: StockHistory[];
+    changePercentage: number;
 }
 
 export class StocksDemoApiClient {
@@ -20,6 +36,23 @@ export class StocksDemoApiClient {
             return data;
         } catch (error) {
             throw new Error(`Failed to fetch stock data for symbol ${symbol}: ${error}`);
+        }
+    }
+
+    public async getStocks(symbols: string[] | null): Promise<Stock[]> {
+        try {
+            let url = `${this.baseUrl}/stocks`;
+            if (symbols !== null && symbols.length > 0) {
+                url = url.concat(`?symbols=${symbols.join(',')}`);
+            }
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch stock data: ${response.statusText}`);
+            }
+            const data: Stock[] = await response.json();
+            return data;
+        } catch (error) {
+            throw new Error(`Failed to fetch stock data: ${error}`);
         }
     }
 }
