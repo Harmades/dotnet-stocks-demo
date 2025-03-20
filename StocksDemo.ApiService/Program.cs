@@ -1,10 +1,12 @@
 using System.Linq;
+using Alpaca.Markets;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,12 @@ builder.Services.AddCors();
 // Add services to the container.
 builder.Services.AddProblemDetails();
 builder.Services.Configure<StocksDemoConfiguration>(builder.Configuration.GetSection(StocksDemoConfiguration.ConfigurationKey));
+builder.Services.AddSingleton<IAlpacaDataClient>((services) =>
+{
+    var configuration = services.GetRequiredService<IOptions<StocksDemoConfiguration>>().Value;
+    var securityKey = new SecretKey(configuration.AlpacaApiKey, configuration.AlpacaApiSecret);
+    return Alpaca.Markets.Environments.Paper.GetAlpacaDataClient(securityKey);
+});
 builder.Services.AddSingleton<IStocksService, StocksService>();
 
 var app = builder.Build();

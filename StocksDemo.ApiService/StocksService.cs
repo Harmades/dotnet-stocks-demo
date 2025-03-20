@@ -7,14 +7,11 @@ using Microsoft.Extensions.Options;
 
 public class StocksService : IStocksService
 {
-    private readonly StocksDemoConfiguration configuration;
     private readonly IAlpacaDataClient client;
 
-    public StocksService(IOptions<StocksDemoConfiguration> configurationOptions)
+    public StocksService(IAlpacaDataClient client)
     {
-        configuration = configurationOptions.Value;
-        var securityKey = new SecretKey(configuration.AlpacaApiKey, configuration.AlpacaApiSecret);
-        client = Environments.Paper.GetAlpacaDataClient(securityKey);
+        this.client = client;
     }
 
     public async Task<Stock> GetStock(string symbol)
