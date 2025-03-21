@@ -64,24 +64,32 @@ public class StocksService : IStocksService
             options = options with { Symbols = mostActiveStocks.Select(stock => stock.Symbol).ToList() };
         }
 
-        var bars = await client.GetHistoricalBarsAsync(
-            new HistoricalBarsRequest(options.Symbols, new Interval<DateTime>(DateTime.Today.AddDays(-1), null), BarTimeFrame.Day)
+        // Get the last days: if market isn't open, return data from the last open day.
+        var bars = await client.ListSnapshotsAsync(
+            new LatestMarketDataListRequest(options.Symbols)
         );
 
-        return bars.Items.Select(bar =>
+        return bars.Select(bar =>
         {
+            var currentBar = bar.Value.CurrentDailyBar;
+            var previousBar = bar.Value.PreviousDailyBar;
+            if (currentBar == null || previousBar == null)
+            {
+                throw new Exception($"Market data unavailable for {bar.Key}");
+            }
+            
             var stock = new Stock
             {
                 Symbol = bar.Key,
                 CurrentPrice = new StockPricePoint
                 {
-                    Low = bar.Value[1].Low,
-                    High = bar.Value[1].High,
-                    Open = bar.Value[1].Open,
-                    Close = bar.Value[1].Close,
-                    Vwap = bar.Value[1].Vwap
+                    Low = currentBar.Low,
+                    High = currentBar.High,
+                    Open = currentBar.Open,
+                    Close = currentBar.Close,
+                    Vwap = currentBar.Vwap
                 },
-                ChangePercentage = (bar.Value[1].Vwap - bar.Value[0].Vwap) / bar.Value[0].Close * 100,
+                ChangePercentage = (currentBar.Vwap - previousBar.Vwap) / currentBar.Close * 100,
             };
 
             return stock;
