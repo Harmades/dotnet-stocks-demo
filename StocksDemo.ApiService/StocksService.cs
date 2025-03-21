@@ -73,7 +73,7 @@ public class StocksService : IStocksService
         {
             var currentBar = bar.Value.CurrentDailyBar;
             var previousBar = bar.Value.PreviousDailyBar;
-            if (currentBar == null || previousBar == null)
+            if (currentBar == null)
             {
                 throw new Exception($"Market data unavailable for {bar.Key}");
             }
@@ -89,7 +89,7 @@ public class StocksService : IStocksService
                     Close = currentBar.Close,
                     Vwap = currentBar.Vwap
                 },
-                ChangePercentage = (currentBar.Vwap - previousBar.Vwap) / currentBar.Close * 100,
+                ChangePercentage = previousBar != null ? (currentBar.Vwap - previousBar.Vwap) / currentBar.Close * 100 : 0,
             };
 
             return stock;
