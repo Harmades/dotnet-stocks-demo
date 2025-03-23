@@ -24,7 +24,8 @@ public class StocksService : IStocksService
             new HistoricalBarsRequest(symbol, BarTimeFrame.Day, new Interval<DateTime>(DateTime.Today.AddDays(-7), null))
         );
 
-        var currentBar = bars.Items[6];
+        var currentBar = bars.Items.Last();
+        var previousBar = bars.Items[^2];
         var stock = new Stock
         {
             Symbol = symbol,
@@ -49,7 +50,7 @@ public class StocksService : IStocksService
                 Volume = b.Volume,
                 Date = b.TimeUtc
             }).ToList(),
-            ChangePercentage = (currentBar.Vwap - bars.Items[5].Vwap) / bars.Items[5].Close * 100
+            ChangePercentage = (currentBar.Vwap - previousBar.Vwap) / previousBar.Close * 100
         };
 
         return stock;

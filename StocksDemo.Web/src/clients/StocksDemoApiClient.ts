@@ -7,7 +7,7 @@ export interface StockPricePoint {
 }
 
 export interface StockHistory {
-    date: string;
+    date: Date;
     price: StockPricePoint;
     volume: number;
 }

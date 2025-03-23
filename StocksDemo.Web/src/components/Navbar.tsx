@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Nav, INavStyles, INavLinkGroup } from '@fluentui/react/lib/Nav';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const Navbar: React.FC = () => {
 
