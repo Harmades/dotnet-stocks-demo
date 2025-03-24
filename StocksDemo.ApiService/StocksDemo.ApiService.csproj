@@ -14,7 +14,13 @@
 
   <ItemGroup>
     <PackageReference Include="Alpaca.Markets" Version="7.2.0" />
-    <PackageReference Include="Aspire.Microsoft.Data.SqlClient" Version="9.1.0" />
+    <PackageReference Include="Aspire.Microsoft.Data.SqlClient" Version="8.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.14">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.1.0" />
   </ItemGroup>
 
 </Project>

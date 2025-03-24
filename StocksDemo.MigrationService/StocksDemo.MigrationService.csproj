@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-StocksDemo.MigrationService-2852382f-b7c8-4617-b319-66fec2ad2f2d</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StocksDemo.ServiceDefaults\StocksDemo.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\StocksDemo.ApiService\StocksDemo.ApiService.csproj" />
+  </ItemGroup>
+</Project>

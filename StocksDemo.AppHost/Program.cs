@@ -7,18 +7,21 @@ var builder = DistributedApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>();
 
 var sql = builder.AddSqlServer("sql")
-                 .WithLifetime(ContainerLifetime.Persistent);
-
-var db = sql.AddDatabase("database");
+                 .WithLifetime(ContainerLifetime.Persistent)
+                 .AddDatabase("database");
 
 var alpacaKey = builder.AddParameter("alpacaApiKey", secret: true);
 var alpacaSecret = builder.AddParameter("alpacaApiSecret", secret: true);
 
 var apiService = builder.AddProject<Projects.StocksDemo_ApiService>("apiservice")
-       .WithReference(db)
-       .WaitFor(db)
+       .WithReference(sql)
+       .WaitFor(sql)
        .WithEnvironment("StocksDemoConfiguration__AlpacaApiKey", alpacaKey)
        .WithEnvironment("StocksDemoConfiguration__AlpacaApiSecret", alpacaSecret);
+
+builder.AddProject<Projects.StocksDemo_MigrationService>("migrations")
+    .WithReference(sql)
+    .WaitFor(sql);
 
 builder.AddNpmApp("webfrontend", "../StocksDemo.Web")
     .WithReference(apiService)
