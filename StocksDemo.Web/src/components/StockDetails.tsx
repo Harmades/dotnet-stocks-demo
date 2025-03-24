@@ -45,6 +45,8 @@ export const StockDetailsComponent: React.FC<StockDetailsProps> = ({ symbol }) =
             <Stack.Item>
                 <LineChart
                     xAxisTitle='Date (UTC)'
+                    yMinValue={stock?.history?.reduce((min, p) => p.price.vwap < min ? p.price.vwap : min, Number.MAX_VALUE) ?? 0}
+                    yMaxValue={stock?.history?.reduce((max, p) => p.price.vwap > max ? p.price.vwap : max, Number.MIN_VALUE) ?? 0}
                     yAxisTitle='Price ($)'
                     data={points}
                 />

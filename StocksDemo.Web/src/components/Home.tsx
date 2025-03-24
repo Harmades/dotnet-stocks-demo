@@ -24,7 +24,13 @@ export const Home: React.FC = () => {
   };
 
   const parseSearchText = (searchText: string | null): void => {
-    setSymbols(searchText?.split(',') ?? null);
+    searchText = searchText?.trim() ?? null;
+    if (searchText == null || searchText === '') {
+      setSymbols(null);
+      return;
+    }
+    let symbols = searchText.split(',');
+    setSymbols(symbols);
   };
 
   return (
@@ -48,7 +54,10 @@ export const Home: React.FC = () => {
           </PanelResizeHandle>
         </Separator>
         <Panel>
-          {selectedSymbol && <StockDetailsComponent symbol={selectedSymbol} />}
+          {selectedSymbol != null
+            ? <StockDetailsComponent symbol={selectedSymbol} />
+            : <div style={{ textAlign: "center" }}>Select a stock to view details.</div>
+          }
         </Panel>
       </PanelGroup>
     </>
