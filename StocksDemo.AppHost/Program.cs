@@ -1,3 +1,4 @@
+using System;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Microsoft.Extensions.Configuration;
@@ -23,11 +24,14 @@ builder.AddProject<Projects.StocksDemo_MigrationService>("migrations")
     .WithReference(sql)
     .WaitFor(sql);
 
-builder.AddNpmApp("webfrontend", "../StocksDemo.Web")
+var port = int.Parse(Environment.GetEnvironmentVariable("PORT")!);
+
+var npmApp = builder.AddNpmApp("webfrontend", "../StocksDemo.Web")
     .WithReference(apiService)
     .WaitFor(apiService)
-    .WithExternalHttpEndpoints()
-    .WithHttpsEndpoint(env: "PORT");
-    
+    .WithHttpsEndpoint(port: port, isProxied: false)
+    .WithExternalHttpEndpoints();
+
+apiService.WithEnvironment("StocksDemoConfiguration__FrontendUrl", $"https://localhost:{port.ToString()}");
 
 builder.Build().Run();

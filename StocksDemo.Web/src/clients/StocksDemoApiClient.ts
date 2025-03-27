@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 export interface StockPricePoint {
     low: number;
     high: number;
@@ -28,7 +30,9 @@ export class StocksDemoApiClient {
 
     public async getStock(symbol: string): Promise<Stock> {
         try {
-            const response = await fetch(`${this.baseUrl}/stocks/${symbol}`);
+            const response = await fetch(`${this.baseUrl}/stocks/${symbol}`, {
+                credentials: 'include'
+            });
             if (!response.ok) {
                 throw new Error(`Failed to fetch stock data for symbol ${symbol}: ${response.statusText}`);
             }
@@ -45,7 +49,9 @@ export class StocksDemoApiClient {
             if (symbols !== null && symbols.length > 0) {
                 url = url.concat(`?symbols=${symbols.join(',')}`);
             }
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                credentials: 'include'
+            });
             if (!response.ok) {
                 throw new Error(`Failed to fetch stock data: ${response.statusText}`);
             }

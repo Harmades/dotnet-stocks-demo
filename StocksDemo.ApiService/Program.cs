@@ -1,6 +1,7 @@
 using System.Linq;
 using Alpaca.Markets;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -37,7 +38,16 @@ builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApiDocument();
+
 var app = builder.Build();
+
+app.UseOpenApi();
+app.UseSwaggerUi(configure =>
+{
+    configure.DocExpansion = "list";
+});
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
@@ -59,7 +69,14 @@ app.MapGet("/stocks", async ([FromQuery(Name = "symbols")] string? symbols, [Fro
 })
 .RequireAuthorization();
 
-app.UseCors(configure => configure.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.MapGet("/", () => Results.Redirect("/swagger"));
+
+
+var configuration = app.Services.GetRequiredService<IOptions<StocksDemoConfiguration>>().Value;
+app.UseCors(configure => configure.WithOrigins(configuration.FrontendUrl).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+
+app.UseDeveloperExceptionPage();
 
 app.MapDefaultEndpoints();
+
 app.Run();

@@ -4,6 +4,8 @@ import { Home } from '../components/Home';
 import { About } from '../components/About';
 import { Navbar } from '../components/Navbar';
 import { getTheme } from '@fluentui/react';
+import { ProtectedRoutes } from '../components/ProtectedRoutes';
+import { RegisterComponent } from '../components/Register';
 
 export const AppRouter: React.FC = () => {
   const theme = getTheme();
@@ -15,9 +17,14 @@ export const AppRouter: React.FC = () => {
           <Navbar />
         </div>
         <div style={{ overflowY: 'scroll', flex: 1 }}>
+          <ProtectedRoutes>
+            <Routes>
+              <Route index element={<Home />} />
+              <Route path="about" element={<About msg="React" />} />
+            </Routes>
+          </ProtectedRoutes>
           <Routes>
-            <Route index element={<Home />} />
-            <Route path="about" element={<About msg="React" />} />
+            <Route path="register" element={<RegisterComponent />} />
           </Routes>
         </div>
       </div>

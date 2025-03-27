@@ -1,9 +1,8 @@
 import React from 'react';
 import { Stock, StocksDemoApiClient } from '../clients/StocksDemoApiClient';
 import { IChartProps, LineChart } from '@fluentui/react-charting';
-import { FontSizes, getTheme, Stack } from '@fluentui/react';
-
-declare let stocksDemoConfig: any;
+import { FontSizes, Stack } from '@fluentui/react';
+import { getConfig } from '../utils/Config';
 
 interface StockDetailsProps {
     symbol: string;
@@ -11,14 +10,13 @@ interface StockDetailsProps {
 
 export const StockDetailsComponent: React.FC<StockDetailsProps> = ({ symbol }) => {
     const [stock, setStock] = React.useState<Stock | null>(null);
-    const theme = getTheme();
+    const config = getConfig();
 
     React.useEffect(() => {
         setStock(null);
         const fetchStock = async (): Promise<Stock> => {
-            const client = new StocksDemoApiClient(stocksDemoConfig.STOCKSDEMOAPI_URL);
+            const client = new StocksDemoApiClient(config.STOCKSDEMOAPI_URL);
             const result = await client.getStock(symbol);
-            // const result = { symbol: 'MSFT', price: 123 };
             return result;
         };
 

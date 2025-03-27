@@ -1,8 +1,7 @@
 import React from "react";
 import { Stock, StocksDemoApiClient } from "../clients/StocksDemoApiClient";
 import { getTheme, IColumn, PrimaryButton, SelectionMode, ShimmeredDetailsList } from "@fluentui/react";
-
-declare let stocksDemoConfig: any;
+import { getConfig } from "../utils/Config";
 
 export interface StocksComponentProps {
     symbols: string[] | null;
@@ -13,11 +12,12 @@ export const StocksComponent: React.FC<StocksComponentProps> = ({ symbols, setSe
     const [stocks, setStocks] = React.useState<Stock[] | null>(null);
 
     const theme = getTheme();
+    const config = getConfig();
 
     React.useEffect(() => {
         setStocks(null);
         const fetchStock = async (): Promise<Stock[]> => {
-            const client = new StocksDemoApiClient(stocksDemoConfig.STOCKSDEMOAPI_URL);
+            const client = new StocksDemoApiClient(config.STOCKSDEMOAPI_URL);
             const result = await client.getStocks(symbols);
             return result;
         };
