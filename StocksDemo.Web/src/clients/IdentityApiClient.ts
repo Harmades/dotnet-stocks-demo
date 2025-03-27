@@ -21,6 +21,7 @@ export class IdentityApiClient {
 
     async login(request: LoginRequest): Promise<void> {
         await fetch(`${this.baseURL}/login?useCookies=true`, {
+            credentials: 'include',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

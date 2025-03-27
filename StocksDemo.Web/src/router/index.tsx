@@ -4,11 +4,14 @@ import { Home } from '../components/Home';
 import { About } from '../components/About';
 import { Navbar } from '../components/Navbar';
 import { getTheme } from '@fluentui/react';
-import { ProtectedRoutes } from '../components/ProtectedRoutes';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 import { RegisterComponent } from '../components/Register';
+import { LoginComponent } from '../components/Login';
+import { UserContext } from '../utils/UserContext';
 
 export const AppRouter: React.FC = () => {
   const theme = getTheme();
+  const [userContext, setUserContext] = React.useState<UserContext | null>(null);
 
   return (
     <Router>
@@ -17,13 +20,12 @@ export const AppRouter: React.FC = () => {
           <Navbar />
         </div>
         <div style={{ overflowY: 'scroll', flex: 1 }}>
-          <ProtectedRoutes>
-            <Routes>
-              <Route index element={<Home />} />
-              <Route path="about" element={<About msg="React" />} />
-            </Routes>
-          </ProtectedRoutes>
           <Routes>
+            <Route element={<ProtectedRoute userContext={userContext} setUserContext={setUserContext} />}>
+              <Route index element={<Home />} />
+            </Route>
+            <Route path="login" element={<LoginComponent setUserContext={setUserContext} />} />
+            <Route path="about" element={<About msg="React" />} />
             <Route path="register" element={<RegisterComponent />} />
           </Routes>
         </div>

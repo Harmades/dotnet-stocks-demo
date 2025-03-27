@@ -26,7 +26,7 @@ builder.AddProject<Projects.StocksDemo_MigrationService>("migrations")
 
 var port = int.Parse(Environment.GetEnvironmentVariable("PORT")!);
 
-var npmApp = builder.AddNpmApp("webfrontend", "../StocksDemo.Web")
+builder.AddNpmApp("webfrontend", "../StocksDemo.Web")
     .WithReference(apiService)
     .WaitFor(apiService)
     .WithHttpsEndpoint(port: port, isProxied: false)
