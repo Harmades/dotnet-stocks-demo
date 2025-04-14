@@ -16,8 +16,8 @@ export const AppRouter: React.FC = () => {
   return (
     <Router>
       <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
-        <div style={{ height: 'auto', border: '1px solid #eee', marginRight: '4px', backgroundColor: theme.palette.themeLighter }}>
-          <Navbar />
+        <div style={{ border: '1px solid #eee', marginRight: '4px', backgroundColor: theme.palette.themeLighter }}>
+          <Navbar userContext={userContext} />
         </div>
         <div style={{ overflowY: 'scroll', flex: 1 }}>
           <Routes>

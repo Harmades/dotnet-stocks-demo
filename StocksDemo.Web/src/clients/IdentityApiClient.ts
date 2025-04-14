@@ -8,10 +8,6 @@ export interface RegisterRequest {
     password: string;
 }
 
-export interface RegisterResponse {
-    errors?: string[];
-}
-
 export class IdentityApiClient {
     private readonly baseURL: string;
 
@@ -30,7 +26,7 @@ export class IdentityApiClient {
         });
     }
 
-    async register(request: RegisterRequest): Promise<RegisterResponse> {
+    async register(request: RegisterRequest): Promise<void> {
         const response = await fetch(`${this.baseURL}/register`, {
             method: 'POST',
             headers: {
@@ -42,6 +38,21 @@ export class IdentityApiClient {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json();
+    }
+
+    async getInfo(): Promise<string> {
+        const response = await fetch(`${this.baseURL}/manage/info`, {
+            credentials: 'include',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json().then((data) => data.email);
     }
 }

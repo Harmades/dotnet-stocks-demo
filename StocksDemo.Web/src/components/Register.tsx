@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { TextField, PrimaryButton, Stack, MessageBar, MessageBarType, FontSizes } from "@fluentui/react";
 import { getConfig } from "../utils/Config";
 import { IdentityApiClient } from "../clients/IdentityApiClient";
+import { useNavigate } from "react-router-dom";
 
 export const RegisterComponent: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+
+    const navigate = useNavigate();
 
     const config = getConfig();
 
@@ -23,6 +26,7 @@ export const RegisterComponent: React.FC = () => {
         try {
             const client = new IdentityApiClient(config.STOCKSDEMOAPI_URL);
             await client.register({ email, password });
+            navigate("/login");
         } catch (error) {
             setErrorMessage("An error occurred during registration.");
         }
