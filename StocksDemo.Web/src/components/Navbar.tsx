@@ -4,13 +4,16 @@ import { Text } from '@fluentui/react/lib/Text';
 import { Nav, INavStyles, INavLinkGroup } from '@fluentui/react/lib/Nav';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../utils/UserContext';
-import { FontSizes, getTheme, ISeparatorStyles, Separator } from '@fluentui/react';
+import { DefaultButton, FontSizes, getTheme, IContextualMenuProps, ISeparatorStyles, Separator } from '@fluentui/react';
+import { IdentityApiClient } from '../clients/IdentityApiClient';
+import { getConfig } from '../utils/Config';
 
 export interface NavbarProps {
   userContext: UserContext | null;
+  setUserContext: (userContext: UserContext | null) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ userContext }: NavbarProps) => {
+export const Navbar: React.FC<NavbarProps> = ({ userContext, setUserContext }: NavbarProps) => {
   const navStyles: Partial<INavStyles> = {
     root: {
       flex: 1,
@@ -55,16 +58,35 @@ export const Navbar: React.FC<NavbarProps> = ({ userContext }: NavbarProps) => {
     },
   ];
 
+  const config = getConfig();
+
+  const menuProps: IContextualMenuProps = {
+    items: [
+      {
+        key: 'logout',
+        text: 'Logout',
+        iconProps: { iconName: 'SignOut' },
+        onClick: (ev) => {
+          new IdentityApiClient(config.STOCKSDEMOAPI_URL)
+            .logout()
+            .then(() => setUserContext(null));
+        },
+      },
+    ],
+  };
+
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
       <Nav groups={navLinkGroups} styles={navStyles} />
       <div style={{ margin: '16px' }}>
         <Separator styles={separatorStyles} />
-        {userContext !== null &&
-          <Text style={{ fontSize: FontSizes.mediumPlus }}>
-            {userContext.email}
-          </Text>
-        }
+        <DefaultButton
+          split
+          disabled={!userContext}
+          menuProps={menuProps}
+          text={userContext?.email ?? "Not logged in"}
+          onClick={_ => setUserContext(null)}
+          styles={{ splitButtonMenuButton: { backgroundColor: 'white' } }} />
       </div>
     </div>
   );

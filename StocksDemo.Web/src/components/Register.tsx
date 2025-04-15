@@ -8,7 +8,6 @@ export const RegisterComponent: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
 
     const navigate = useNavigate();
 
@@ -16,10 +15,10 @@ export const RegisterComponent: React.FC = () => {
 
     const handleRegister = async () => {
         setErrorMessage("");
-        setSuccessMessage("");
 
-        if (password.length < 8) {
-            setErrorMessage("Password must be at least 8 characters long.");
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*\W).{6,}$/;
+        if (!passwordRegex.test(password)) {
+            setErrorMessage("Password must be at least 6 characters long, contain at least one uppercase letter, one digit, and one non-alphanumeric character.");
             return;
         }
 
@@ -36,13 +35,8 @@ export const RegisterComponent: React.FC = () => {
         <Stack tokens={{ childrenGap: 15 }} styles={{ root: { maxWidth: 300, margin: "0 auto" } }}>
             <div style={{ textAlign: "center", fontSize: FontSizes.large }}>Register</div>
             {errorMessage && (
-                <MessageBar messageBarType={MessageBarType.error} isMultiline={false}>
+                <MessageBar messageBarType={MessageBarType.error}>
                     {errorMessage}
-                </MessageBar>
-            )}
-            {successMessage && (
-                <MessageBar messageBarType={MessageBarType.success} isMultiline={false}>
-                    {successMessage}
                 </MessageBar>
             )}
             <TextField

@@ -16,13 +16,28 @@ export class IdentityApiClient {
     }
 
     async login(request: LoginRequest): Promise<void> {
-        await fetch(`${this.baseURL}/login?useCookies=true`, {
+        const response = await fetch(`${this.baseURL}/login?useCookies=true`, {
             credentials: 'include',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(request),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    }
+
+    async logout(): Promise<void> {
+        await fetch(`${this.baseURL}/logout`, {
+            credentials: 'include',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
         });
     }
 

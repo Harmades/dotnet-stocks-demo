@@ -17,7 +17,7 @@ export const AppRouter: React.FC = () => {
     <Router>
       <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
         <div style={{ border: '1px solid #eee', marginRight: '4px', backgroundColor: theme.palette.themeLighter }}>
-          <Navbar userContext={userContext} />
+          <Navbar userContext={userContext} setUserContext={setUserContext} />
         </div>
         <div style={{ overflowY: 'scroll', flex: 1 }}>
           <Routes>
